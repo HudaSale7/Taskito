@@ -1,0 +1,24 @@
+{
+  "name": "TaskFinisher",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/HudaSale7/TaskFinisher.git",
+  "author": "HudaSale7 <hudasaleh640@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/app.ts",
+    "start": "node ./dist/app.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@prisma/client": "5.3.1",
+    "@types/node": "^20.6.5",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.3.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
