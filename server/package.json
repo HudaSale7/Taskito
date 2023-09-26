@@ -5,15 +5,23 @@
   "repository": "https://github.com/HudaSale7/TaskFinisher.git",
   "author": "HudaSale7 <hudasaleh640@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/app.ts",
+    "dev": "nodemon -e ts -w ./src -x yarn watch:serve",
+    "watch:serve": "node --loader ts-node/esm src/app.ts",
     "start": "node ./dist/app.js",
     "build": "tsc"
   },
   "dependencies": {
+    "@apollo/server": "^4.9.1",
     "@prisma/client": "5.3.1",
+    "@types/cors": "^2.8.14",
     "@types/node": "^20.6.5",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "graphql": "^16.8.0",
     "nodemon": "^3.0.1",
     "prisma": "^5.3.1",
     "typescript": "^5.2.2"
