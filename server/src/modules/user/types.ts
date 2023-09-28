@@ -10,9 +10,6 @@ export const userTypes = /* GraphQL */ `
     id: ID!
     name: String!
   }
-  extend type Query {
-    me: User!
-  }
   extend type Mutation {
     signup(user: userSignUpInput!): AuthPayload!
     login(user: userLoginInput!): AuthPayload!
