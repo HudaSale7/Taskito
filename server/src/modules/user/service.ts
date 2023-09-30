@@ -20,4 +20,5 @@ const findUser = async (userEmail: string) => {
   return result;
 };
 
+
 export default { createUser, findUser };

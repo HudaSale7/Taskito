@@ -1,4 +1,6 @@
 import { prisma } from "../../util/db.js";
+import { handleError } from "../../util/errorHandler.js";
+import service from "../user/service.js";
 
 enum AccessType {
   "CREATOR",
@@ -66,9 +68,51 @@ const getAllWorkspace = async (userId: number) => {
   return result;
 };
 
+const addUser = async (userEmail: string, workspaceId: number) => {
+  const user = await service.findUser(userEmail);
+  if (!user) {
+    handleError({ message: "user not found", code: 404 });
+    return;
+  }
+  const result = await prisma.userWorkspace.create({
+    data: {
+      accessType: AccessType[1],
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+      workspace: {
+        connect: {
+          id: workspaceId,
+        },
+      },
+      
+    },
+    select: {
+      workspace: true,
+    },
+  });
+  return result;
+};
+
+const getAllUser = async (workspaceId: number) => {
+  const result = await prisma.userWorkspace.findMany({
+    where: {
+      workspaceId: workspaceId,
+    },
+    select: {
+      user: true,
+    },
+  });
+  return result;
+};
+
 export default {
   createWorkspace,
   deleteWorkspace,
   getWorkspace,
   getAllWorkspace,
+  addUser,
+  getAllUser
 };

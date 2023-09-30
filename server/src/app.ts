@@ -28,6 +28,6 @@ app.use(
   })
 );
 
-httpServer.listen(4000, () => {
+httpServer.listen(4002, () => {
   console.log("🚀 Server is running on port 4000");
 });

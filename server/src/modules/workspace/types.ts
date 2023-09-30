@@ -2,6 +2,7 @@ export const workspaceTypes = /* GraphQL */ `
   type Workspace {
     id: ID!
     title: String
+    users: [UsersGetType]!
   }
   type WorkspaceAccessType {
     workspace: Workspace
@@ -10,6 +11,9 @@ export const workspaceTypes = /* GraphQL */ `
   type WorkspacesGetType {
     workspace: Workspace
   }
+  type UsersGetType {
+    user: User
+  }
   extend type Query {
     getWorkspace(id: ID!): WorkspaceAccessType!
     getAllWorkspace: [WorkspacesGetType]!
@@ -17,6 +21,7 @@ export const workspaceTypes = /* GraphQL */ `
   extend type Mutation {
     createWorkspace(workspace: WorkspaceCreateInput!): Workspace!
     deleteWorkspace(id: ID!): Workspace!
+    addUserToWorkspace(userEmail: String!, workspaceId: ID!): Workspace!
   }
   input WorkspaceCreateInput {
     title: String!
