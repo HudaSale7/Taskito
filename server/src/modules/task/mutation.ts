@@ -36,4 +36,18 @@ export const taskMutation = {
     checkForServerError(task);
     return task;
   },
+
+  addUserToTask: async (
+    _: any,
+    args: { taskId: string; userEmail: string },
+    contextValue: any
+  ) => {
+    checkAuthentication(contextValue);
+    const result = await service.addUserToTask(
+      args.userEmail,
+      Number(args.taskId)
+    );
+    checkForServerError(result);
+    return result;
+  },
 };

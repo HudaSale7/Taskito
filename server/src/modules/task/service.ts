@@ -1,4 +1,6 @@
 import { prisma } from "../../util/db";
+import { handleError } from "../../util/errorHandler";
+import service from "../user/service";
 
 type Todo = {
   content: string;
@@ -63,4 +65,58 @@ const getTask = async (taskId: number) => {
   return task;
 };
 
-export default { createTask, deleteTask, getTask };
+const addUserToTask = async (userEmail: string, taskId: number) => {
+  const user = await service.findUser(userEmail);
+  if (!user) {
+    handleError({ message: "user not found", code: 404 });
+    return;
+  }
+  const result = await prisma.userTask.create({
+    data: {
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+      task: {
+        connect: {
+          id: taskId,
+        },
+      },
+    },
+    select: {
+      task: true,
+    },
+  });
+  return result.task;
+};
+
+const getAllTodo = async (taskId: number) => {
+  const result = await prisma.todo.findMany({
+    where: {
+      taskId: taskId,
+    },
+  });
+  return result;
+};
+
+const getAllUser = async (taskId: number) => {
+  const users = await prisma.userTask.findMany({
+    where: {
+      taskId: taskId,
+    },
+    select: {
+      user: true,
+    },
+  });
+  return users; 
+};
+
+export default {
+  createTask,
+  deleteTask,
+  getTask,
+  addUserToTask,
+  getAllTodo,
+  getAllUser,
+};

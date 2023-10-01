@@ -27,7 +27,7 @@ const createWorkspace = async (
       workspace: true,
     },
   });
-  return result;
+  return result.workspace;
 };
 
 const deleteWorkspace = async (workspaceId: number, userId: number) => {
@@ -40,7 +40,7 @@ const deleteWorkspace = async (workspaceId: number, userId: number) => {
       workspace: true,
     },
   });
-  return result;
+  return result.workspace;
 };
 
 const getWorkspace = async (workspaceId: number, userId: number) => {
@@ -87,13 +87,12 @@ const addUser = async (userEmail: string, workspaceId: number) => {
           id: workspaceId,
         },
       },
-      
     },
     select: {
       workspace: true,
     },
   });
-  return result;
+  return result.workspace;
 };
 
 const getAllUser = async (workspaceId: number) => {
@@ -108,11 +107,34 @@ const getAllUser = async (workspaceId: number) => {
   return result;
 };
 
+const gatAllTask = async (workspaceId: number) => {
+  const result = await prisma.task.findMany({
+    where: {
+      workspaceId: workspaceId,
+    },
+  });
+  return result;
+};
+
+const getAllStatus = async (workspaceId: number) => {
+  const result = await prisma.workspaceStatus.findMany({
+    where: {
+      workspaceId: workspaceId,
+    },
+    select: {
+      status: true,
+    },
+  });
+  return result;
+};
+
 export default {
   createWorkspace,
   deleteWorkspace,
   getWorkspace,
   getAllWorkspace,
   addUser,
-  getAllUser
+  getAllUser,
+  gatAllTask,
+  getAllStatus,
 };

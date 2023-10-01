@@ -7,11 +7,11 @@ export const taskTypes = /* GraphQL */ `
     todos: [TodosGetType]!
   }
   type UsersGetType {
-    user: User
+    user: User!
   }
   type TodosGetType {
-    content: String
-    completed: Boolean
+    content: String!
+    completed: Boolean!
   }
   extend type Query {
     getTask(id: ID!): Task!
@@ -19,6 +19,7 @@ export const taskTypes = /* GraphQL */ `
   extend type Mutation {
     createTask(task: CreateTaskInput!): Task!
     deleteTask(id: ID!): Task!
+    addUserToTask(taskId: ID!, userEmail: String!): Task!
   }
   input CreateTaskInput {
     title: String!

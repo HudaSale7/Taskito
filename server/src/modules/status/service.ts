@@ -16,16 +16,19 @@ const createStatus = async (workspaceId: number, status: { type: string }) => {
       status: true,
     },
   });
-  return result;
+  return result.status;
 };
 
-const deleteStatus = async (statusId: number) => {
-  const result = await prisma.status.delete({
+const deleteStatus = async (statusId: number, workspaceId: number) => {
+  const result = await prisma.workspaceStatus.delete({
     where: {
-      id: statusId,
+      workspaceId_statusId: { workspaceId, statusId },
+    },
+    select: {
+      status: true,
     },
   });
-  return result;
+  return result.status;
 };
 
 export default { createStatus, deleteStatus };

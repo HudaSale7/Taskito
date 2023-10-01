@@ -13,7 +13,7 @@ export const workspaceMutation = {
       contextValue.user.id
     );
     checkForServerError(workspace);
-    return workspace.workspace;
+    return workspace;
   },
 
   deleteWorkspace: async (_: any, args: { id: any }, contextValue: any) => {
@@ -23,7 +23,7 @@ export const workspaceMutation = {
       contextValue.user.id
     );
     checkForServerError(workspace);
-    return workspace.workspace;
+    return workspace;
   },
 
   addUserToWorkspace: async (
@@ -37,6 +37,6 @@ export const workspaceMutation = {
       Number(args.workspaceId)
     );
     checkForServerError(result);
-    return result?.workspace;
+    return result;
   },
 };

@@ -15,6 +15,6 @@ export const workspaceQuery = {
     checkAuthentication(contextValue);
     const workspaces = await service.getAllWorkspace(contextValue.user.id);
     checkForServerError(workspaces);
-    return [...workspaces];
+    return workspaces;
   },
 };

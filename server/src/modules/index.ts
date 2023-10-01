@@ -6,7 +6,8 @@ import {
   workspaceResolvers,
 } from "./workspace/index.js";
 import { statusTypes, statusMutation } from "./status/index.js";
-import { taskTypes, taskMutation, taskQuery } from "./task/index.js";
+import { taskTypes, taskMutation, taskQuery, taskResolvers} from "./task/index.js";
+import { todoTypes, todoMutation } from "./todo/index.js";
 
 export const typeDefs = `#graphql
   type Query
@@ -15,6 +16,7 @@ export const typeDefs = `#graphql
   ${workspaceTypes}
   ${statusTypes}
   ${taskTypes}
+  ${todoTypes}
 `;
 
 export const resolvers = {
@@ -27,6 +29,8 @@ export const resolvers = {
     ...workspaceMutation,
     ...statusMutation,
     ...taskMutation,
+    ...todoMutation,
   },
   Workspace: workspaceResolvers,
+  Task: taskResolvers,
 };

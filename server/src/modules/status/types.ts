@@ -5,6 +5,6 @@ export const statusTypes = /* GraphQL */ `
   }
   extend type Mutation {
     createStatus(workspaceId: ID!, status: String!): Status!
-    deleteStatus(statusId: ID!): Status!
+    deleteStatus(statusId: ID!, workspaceId: ID!): Status!
   }
 `;
