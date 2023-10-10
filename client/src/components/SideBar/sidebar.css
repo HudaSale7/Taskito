@@ -1,0 +1,14 @@
+.sidebar {
+  height: 100vh;
+  width: 260px;
+  position: fixed;
+  z-index: 1;
+  top: 50px;
+  left: 0;
+}
+
+.sidebar .header {
+  padding: 15px;
+  text-align: center;
+  border-bottom: .5px solid rgba(194, 224, 255, 0.08);
+}
