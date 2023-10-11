@@ -37,11 +37,11 @@ function SignUp() {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" color="#9FADBC">
           Sign in
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
-        <TextField
+          <TextField
             margin="normal"
             required
             fullWidth
@@ -78,11 +78,11 @@ function SignUp() {
           />
           <Button
             fullWidth
-            color="primary"
+            color="secondary"
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             onClick={() => {
-              mutation.mutate({name, email, password });
+              mutation.mutate({ name, email, password });
             }}
           >
             Sign In

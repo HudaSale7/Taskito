@@ -1,5 +1,5 @@
 * {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -7,4 +7,17 @@
 
 body {
   position: relative;
+  background-color: #1f262e;
+}
+
+form label {
+  color: #9fadbc !important;
+}
+
+form input {
+  color: #9fadbc !important;
+}
+
+form fieldset {
+  border-color: #9fadbc !important;
 }

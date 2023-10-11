@@ -36,19 +36,21 @@ function Login() {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" color="#9FADBC">
           Sign in
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}> 
+        <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
+            variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="outlined-basic"
             label="Email Address"
             name="email"
             autoComplete="email"
             autoFocus
+            color="secondary"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -60,13 +62,14 @@ function Login() {
             label="Password"
             type="password"
             id="password"
+            color="secondary"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
             fullWidth
-            color="primary"
+            color="secondary"
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             onClick={() => {
@@ -82,4 +85,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
