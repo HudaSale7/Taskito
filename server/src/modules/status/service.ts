@@ -1,34 +1,37 @@
 import { prisma } from "../../util/db";
 
 const createStatus = async (workspaceId: number, status: { type: string }) => {
-  const result = await prisma.workspaceStatus.create({
+  const result = await prisma.status.create({
     data: {
       workspace: {
         connect: {
           id: workspaceId,
         },
       },
-      status: {
-        create: status,
-      },
-    },
-    select: {
-      status: true,
-    },
+      type: status.type,
+    }
   });
-  return result.status;
+
+  return result;
 };
 
-const deleteStatus = async (statusId: number, workspaceId: number) => {
-  const result = await prisma.workspaceStatus.delete({
+const deleteStatus = async (statusId: number) => {
+  const result = await prisma.status.delete({
     where: {
-      workspaceId_statusId: { workspaceId, statusId },
+      id: statusId,
     },
-    select: {
-      status: true,
-    },
+    
   });
-  return result.status;
+  return result;
 };
 
-export default { createStatus, deleteStatus };
+const getAllTask = async (statusId: number) => {
+  const result = await prisma.task.findMany({
+    where: {
+      statusId: statusId,
+    },
+  });
+  return result;
+}
+
+export default { createStatus, deleteStatus, getAllTask };

@@ -4,14 +4,10 @@ export const taskTypes = /* GraphQL */ `
     title: String!
     priority: String!
     users: [UsersGetType]!
-    todos: [TodosGetType]!
+    todos: [Todo]!
   }
   type UsersGetType {
     user: User!
-  }
-  type TodosGetType {
-    content: String!
-    completed: Boolean!
   }
   extend type Query {
     getTask(id: ID!): Task!
@@ -24,7 +20,6 @@ export const taskTypes = /* GraphQL */ `
   input CreateTaskInput {
     title: String!
     priority: String!
-    workspaceId: ID!
     statusId: ID!
     todos: [TodosInput]
     usersId: [ID]

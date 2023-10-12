@@ -1,8 +1,8 @@
 {
-  "name": "TaskFinisher",
+  "name": "Taskito",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/HudaSale7/TaskFinisher.git",
+  "repository": "https://github.com/HudaSale7/Taskito.git",
   "author": "HudaSale7 <hudasaleh640@gmail.com>",
   "license": "MIT",
   "type": "module",

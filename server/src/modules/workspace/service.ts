@@ -107,23 +107,14 @@ const getAllUser = async (workspaceId: number) => {
   return result;
 };
 
-const gatAllTask = async (workspaceId: number) => {
-  const result = await prisma.task.findMany({
-    where: {
-      workspaceId: workspaceId,
-    },
-  });
-  return result;
-};
-
 const getAllStatus = async (workspaceId: number) => {
-  const result = await prisma.workspaceStatus.findMany({
+  const result = await prisma.status.findMany({
     where: {
       workspaceId: workspaceId,
     },
-    select: {
-      status: true,
-    },
+    orderBy: {
+      id: "asc",
+    }
   });
   return result;
 };
@@ -135,6 +126,5 @@ export default {
   getAllWorkspace,
   addUser,
   getAllUser,
-  gatAllTask,
   getAllStatus,
 };

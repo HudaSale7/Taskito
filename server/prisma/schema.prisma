@@ -22,16 +22,16 @@ model User {
 model Workspace {
   id Int @id @default(autoincrement())
   title String
-  tasks Task[]
   users UserWorkspace[]
-  statuses WorkspaceStatus[]
+  status Status[]
 }
 
 model Status {
   id Int @id @default(autoincrement())
   type String
   tasks Task[]
-  workspaces WorkspaceStatus[]
+  workspaceId Int
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
 model Task {
@@ -40,10 +40,8 @@ model Task {
   priority String
   todos Todo[]
   statusId Int
-  workspaceId Int
   users UserTask[]
-  status Status @relation(fields: [statusId], references: [id])
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  status Status @relation(fields: [statusId], references: [id], onDelete: Cascade)
 } 
 
 model Todo {
@@ -51,31 +49,23 @@ model Todo {
   content String
   completed Boolean
   taskId Int
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model UserWorkspace {
   userId Int
   workspaceId Int
   user User @relation(fields: [userId], references: [id])
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   accessType String
   @@id([userId, workspaceId])
-}
-
-model WorkspaceStatus {
-  workspaceId Int
-  statusId Int
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
-  status Status @relation(fields: [statusId], references: [id])
-  @@id([workspaceId, statusId])
 }
 
 model UserTask {
   userId Int
   taskId Int
   user User @relation(fields: [userId], references: [id])
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
   @@id([userId, taskId])
 }
 

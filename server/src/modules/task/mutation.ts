@@ -12,7 +12,6 @@ type Todo = {
 interface CreateTaskArgs {
   title: string;
   priority: string;
-  workspaceId: string;
   statusId: string;
   todos: Todo[];
   usersId: string[];

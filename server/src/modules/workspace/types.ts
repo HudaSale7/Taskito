@@ -3,8 +3,7 @@ export const workspaceTypes = /* GraphQL */ `
     id: ID!
     title: String
     users: [UsersGetType]!
-    tasks: [Task]!
-    statuses: [StatusGetType]!
+    statuses: [Status]!
   }
   type WorkspaceAccessType {
     workspace: Workspace
@@ -12,9 +11,6 @@ export const workspaceTypes = /* GraphQL */ `
   }
   type WorkspacesGetType {
     workspace: Workspace
-  }
-  type StatusGetType {
-    status: Status
   }
   type UsersGetType {
     user: User

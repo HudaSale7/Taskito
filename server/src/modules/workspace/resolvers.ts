@@ -7,11 +7,6 @@ export const workspaceResolvers = {
     checkForServerError(users);
     return users;
   },
-  tasks: async (parent: any) => {
-    const tasks = await service.gatAllTask(Number(parent.id));
-    checkForServerError(tasks);
-    return tasks;
-  },
   statuses: async (parent: any) => {
     const statuses = await service.getAllStatus(Number(parent.id));
     checkForServerError(statuses);

@@ -10,7 +10,6 @@ type Todo = {
 interface CreateTaskArgs {
   title: string;
   priority: string;
-  workspaceId: string;
   statusId: string;
   todos: Todo[];
   usersId: string[];
@@ -21,7 +20,6 @@ const createTask = async (args: CreateTaskArgs) => {
     data: {
       title: args.title,
       priority: args.priority,
-      workspaceId: Number(args.workspaceId),
       statusId: Number(args.statusId),
       todos: {
         create: args.todos,

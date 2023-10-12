@@ -5,7 +5,7 @@ import {
   workspaceTypes,
   workspaceResolvers,
 } from "./workspace/index.js";
-import { statusTypes, statusMutation } from "./status/index.js";
+import { statusTypes, statusMutation, statusResolvers } from "./status/index.js";
 import { taskTypes, taskMutation, taskQuery, taskResolvers} from "./task/index.js";
 import { todoTypes, todoMutation } from "./todo/index.js";
 
@@ -33,4 +33,5 @@ export const resolvers = {
   },
   Workspace: workspaceResolvers,
   Task: taskResolvers,
+  Status: statusResolvers,
 };

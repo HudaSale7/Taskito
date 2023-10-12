@@ -20,13 +20,12 @@ export const statusMutation = {
   
   deleteStatus: async (
     _: any,
-    args: { statusId: string; workspaceId: string },
+    args: { statusId: string},
     contextValue: any
   ) => {
     checkAuthentication(contextValue);
     const status = await service.deleteStatus(
       Number(args.statusId),
-      Number(args.workspaceId)
     );
     checkForServerError(status);
     return status;
