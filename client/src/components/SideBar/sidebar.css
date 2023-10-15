@@ -5,6 +5,7 @@
   z-index: 1;
   top: 50px;
   left: 0;
+  border-right: 0.5px solid rgba(194, 224, 255, 0.08);
 }
 
 .sidebar .header {

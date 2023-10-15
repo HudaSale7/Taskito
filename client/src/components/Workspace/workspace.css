@@ -2,4 +2,44 @@
   position: absolute;
   left: 260px;
   top: 50px;
+  width: calc(100% - 260px);
+  height: calc(100vh - 50px);
+}
+
+.workspace .board {
+  color: white;
+  padding: 20px;
+}
+
+.workspace .board .status-list {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.workspace .board .status-list .status  {
+  width: 250px;
+}
+
+.workspace .board .status-list .status .status-header {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border-bottom: 1px solid #90caf9;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.workspace .board .status-list .status input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  background-color: #313a45;
+  outline: none;
+  border: none;
+  caret-color: white;
+  color: white;
 }
