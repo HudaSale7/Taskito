@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material/styles";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useParams } from "react-router";
 import "./sidebar.css";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 import { useQuery } from "react-query";
@@ -8,13 +8,14 @@ import { useState } from "react";
 
 function SideBar() {
   const theme = useTheme();
+  const { id } = useParams();
   const query = useQuery(["workspaces"], getWorkspaces);
-  const [selected, setSelected] = useState("-1");
+  const [selected, setSelected] = useState(id? id: "-1");
   const navigate = useNavigate();
   const navigateToWorkspace = (id: string) => {
     setSelected(id);
     navigate(`/workspace/${id}`);
-  }
+  };
   return (
     <>
       <div

@@ -7,6 +7,7 @@
   letter-spacing: 1px;
   padding: 0 15px;
   border-bottom: .5px solid rgba(194, 224, 255, 0.08);
+  position: fixed;
 }
 
 

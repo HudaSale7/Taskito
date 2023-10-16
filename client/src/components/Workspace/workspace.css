@@ -2,13 +2,39 @@
   position: absolute;
   left: 260px;
   top: 50px;
-  width: calc(100% - 260px);
   height: calc(100vh - 50px);
+  width: calc(100% - 260px);
+  display: flex;
+  flex-direction: column;
 }
 
 .workspace .board {
   color: white;
-  padding: 20px;
+  width: 100%;
+  height: calc(100% - 50px);
+  overflow: auto;
+  position: absolute;
+  top: 50px;
+  padding: 10px 20px;
+}
+
+.workspace .board::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f5f5f5;
+}
+
+.workspace .board::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #313a45;
+}
+
+.workspace .board::-webkit-scrollbar-thumb:hover {
+  background: #9fadbc;
+}
+
+.workspace .board::-webkit-scrollbar-track-piece {
+  background-color: #1f262e;
 }
 
 .workspace .board .status-list {
@@ -19,16 +45,19 @@
   margin-bottom: 20px;
 }
 
-.workspace .board .status-list .status  {
-  width: 250px;
+.workspace .board .status-list .status {
+  min-width: 250px;
 }
 
 .workspace .board .status-list .status .status-header {
   width: 100%;
-  padding: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
   border-bottom: 1px solid #90caf9;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .workspace .board .status-list .status input {
@@ -42,4 +71,45 @@
   border: none;
   caret-color: white;
   color: white;
+}
+
+.workspace .navbar {
+  width: calc(100% - 260px);
+  height: 50px;
+  background-color: #1f262e;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  position: fixed;
+  z-index: 1;
+  justify-content: space-between;
+}
+
+.workspace .navbar .users div {
+  border: none !important;
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 14px !important;
+  cursor: pointer;
+}
+
+.workspace .navbar .users {
+  display: flex;
+  justify-content: space-between;
+  gap: 70px;
+  align-items: center;
+  width: fit-content;
+}
+
+.workspace .navbar .users .add-user {
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  display: flex;
+  background-color: #313a45;
+}
+
+.workspace .navbar .users .add-user:hover {
+  background-color: #9fadbc;
 }

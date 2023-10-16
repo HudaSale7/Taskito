@@ -89,10 +89,10 @@ const addUser = async (userEmail: string, workspaceId: number) => {
       },
     },
     select: {
-      workspace: true,
+      user: true,
     },
   });
-  return result.workspace;
+  return result.user;
 };
 
 const getAllUser = async (workspaceId: number) => {

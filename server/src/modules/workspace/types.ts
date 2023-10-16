@@ -22,7 +22,7 @@ export const workspaceTypes = /* GraphQL */ `
   extend type Mutation {
     createWorkspace(workspace: WorkspaceCreateInput!): Workspace!
     deleteWorkspace(id: ID!): Workspace!
-    addUserToWorkspace(userEmail: String!, workspaceId: ID!): Workspace!
+    addUserToWorkspace(userEmail: String!, workspaceId: ID!): User!
   }
   input WorkspaceCreateInput {
     title: String!
