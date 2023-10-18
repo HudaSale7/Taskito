@@ -6,13 +6,14 @@
   width: calc(100% - 260px);
   display: flex;
   flex-direction: column;
+  background-color: #313a45;
 }
 
 .workspace .board {
-  color: white;
+  color: #e8ecf0;
   width: 100%;
   height: calc(100% - 50px);
-  overflow: auto;
+  overflow-x: auto;
   position: absolute;
   top: 50px;
   padding: 10px 20px;
@@ -40,13 +41,16 @@
 .workspace .board .status-list {
   display: flex;
   flex-direction: row;
-  gap: 30px;
-  align-items: center;
-  margin-bottom: 20px;
+  gap: 20px;
+  height: 100%;
 }
 
 .workspace .board .status-list .status {
-  min-width: 250px;
+  min-width: 270px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
 }
 
 .workspace .board .status-list .status .status-header {
@@ -58,6 +62,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #1f262e;
+  height: 50px;
 }
 
 .workspace .board .status-list .status input {
@@ -66,7 +72,7 @@
   border-radius: 5px;
   border: none;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  background-color: #313a45;
+  background-color: #1f262e;
   outline: none;
   border: none;
   caret-color: white;
@@ -84,6 +90,7 @@
   position: fixed;
   z-index: 1;
   justify-content: space-between;
+  color: #e8ecf0;
 }
 
 .workspace .navbar .users div {
@@ -113,3 +120,62 @@
 .workspace .navbar .users .add-user:hover {
   background-color: #9fadbc;
 }
+
+.workspace .board .status-list .status .task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: calc(100% - 60px);
+  padding-right: 5px;
+}
+
+.workspace .board .status-list .status .task-list::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f5f5f5;
+}
+
+.workspace .board .status-list .status .task-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #313a45;
+}
+
+.workspace
+  .board
+  .status-list
+  .status
+  .task-list::-webkit-scrollbar-thumb:hover {
+  background: #9fadbc;
+}
+
+.workspace
+  .board
+  .status-list
+  .status
+  .task-list::-webkit-scrollbar-track-piece {
+  background-color: #1f262e;
+}
+
+.workspace .board .status-list .status .task-list .task {
+  background-color: #1f262e;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workspace .task-form button {
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
+  z-index: 1;
+}
+
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper  {
+  background-color: #1f262e !important;
+  color: #e8ecf0 !important;
+}
+

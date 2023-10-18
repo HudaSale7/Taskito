@@ -44,12 +44,29 @@ function Board(props: { workspaceId: string; workspace: any }) {
           {props.workspace.statuses.map((status: any) => (
             <div className="status" key={status.id}>
               <div className="status-header">
-                <div className="status-type">{status.type.toLocaleUpperCase()}</div>
+                <div className="status-type">
+                  {status.type.toLocaleUpperCase()}
+                </div>
                 <IconButton>
-                  <MoreHorizIcon fontSize="small" color="secondary"/>
+                  <MoreHorizIcon fontSize="small" color="secondary" />
                 </IconButton>
               </div>
-              <div className="status-body"></div>
+              <div className="task-list">
+                <div className="task">
+                  <div className="title">task 1</div>
+                  <div className="priority">priority: high</div>
+                </div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+                <div className="task">task 1</div>
+              </div>
             </div>
           ))}
           <div className="status">

@@ -1,8 +1,9 @@
 * {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", sans-serif !important;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  letter-spacing: 1px;
 }
 
 body {
@@ -10,14 +11,29 @@ body {
   background-color: #1f262e;
 }
 
-form label {
+label {
   color: #9fadbc !important;
 }
 
-form input {
-  color: #9fadbc !important;
+input {
+  color: #e8ecf0 !important;
+  margin: 0 !important;
 }
 
-form fieldset {
+fieldset {
   border-color: #9fadbc !important;
+}
+
+textarea {
+  max-width: 80%;
+  width: 80%;
+  height: 44px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  background-color: #1f262e;
+  outline: none;
+  caret-color: #e8ecf0;
+  color: #e8ecf0;
+  padding: 10px;
 }

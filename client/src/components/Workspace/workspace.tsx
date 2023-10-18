@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { getWorkspace } from "./workspaceApi";
 import Board from "./board";
 import NavBar from "./navbar";
+import TaskForm from "./taskForm";
 
 
 function Workspace() {
@@ -22,6 +23,10 @@ function Workspace() {
               workspace={query.data.getWorkspace.workspace}
             />
             <Board
+              workspaceId={workspaceId}
+              workspace={query.data?.getWorkspace.workspace}
+            />
+            <TaskForm
               workspaceId={workspaceId}
               workspace={query.data?.getWorkspace.workspace}
             />
