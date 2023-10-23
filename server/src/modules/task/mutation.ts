@@ -14,7 +14,7 @@ interface CreateTaskArgs {
   priority: string;
   statusId: string;
   todos: Todo[];
-  usersId: string[];
+  users: string[];
 }
 
 export const taskMutation = {

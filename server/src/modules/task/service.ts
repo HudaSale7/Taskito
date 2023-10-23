@@ -12,7 +12,7 @@ interface CreateTaskArgs {
   priority: string;
   statusId: string;
   todos: Todo[];
-  usersId: string[];
+  users: string[];
 }
 
 const createTask = async (args: CreateTaskArgs) => {
@@ -26,12 +26,12 @@ const createTask = async (args: CreateTaskArgs) => {
       },
     },
   });
-  args.usersId.map(async (id) => {
+  args.users.map(async (email) => {
     const connectUsersToTask = await prisma.userTask.create({
       data: {
         user: {
           connect: {
-            id: Number(id),
+            email: email,
           },
         },
         task: {

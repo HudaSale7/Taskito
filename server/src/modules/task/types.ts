@@ -22,7 +22,7 @@ export const taskTypes = /* GraphQL */ `
     priority: String!
     statusId: ID!
     todos: [TodosInput]
-    usersId: [ID]
+    users: [String]
   }
   input TodosInput {
     content: String

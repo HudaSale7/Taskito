@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -16,20 +16,67 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
+import { useMutation, useQueryClient } from "react-query";
+import { createTask } from "./workspaceApi";
+import { Todo } from "./types";
+import { modalContext } from "./modalContext";
 
 function TaskForm(props: { workspaceId: string; workspace: any }) {
-  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [statusId, setStatusId] = useState("");
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
-  const [todos, setTodos] = useState<string[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [todo, setTodo] = useState("");
   const [users, setUsers] = useState<string[]>([]);
   const theme = useTheme();
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const priorityOptions = ["Urgent", "High", "Normal", "Low"];
+  const queryClient = useQueryClient();
+  const context = useContext(modalContext);
+
+  const mutation = useMutation({
+    mutationFn: createTask,
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ["workspace", props.workspaceId],
+        (oldData: any) => {
+          return {
+            getWorkspace: {
+              workspace: {
+                ...oldData.getWorkspace.workspace,
+                statuses: oldData.getWorkspace.workspace.statuses.map(
+                  (status: any) => {
+                    if (status.id === statusId) {
+                      status.tasks.push(data.createTask);
+                      return status;
+                    }
+                    return status;
+                  }
+                ),
+              },
+            },
+          };
+        }
+      );
+    },
+  });
+
+  const handleCreateTask = () => {
+    mutation.mutate({
+      title,
+      statusId,
+      priority,
+      users,
+      todos,
+    });
+    context.setModal(false);
+    setTitle("");
+    setStatus("");
+    setPriority("");
+    setUsers([]);
+    setTodos([]);
+    setTodo("");
+  };
 
   const style = {
     position: "absolute",
@@ -80,13 +127,17 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   return (
     <div className="task-form">
-      <Button onClick={handleOpen} color="secondary" variant="contained">
+      <Button
+        onClick={() => context.setModal(true)}
+        color="secondary"
+        variant="contained"
+      >
         <AddIcon fontSize="small" />
         Task
       </Button>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={context.modal}
+        onClose={() => context.setModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -111,7 +162,8 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Status"
-                sx={{ color: "#e8ecf0" }}
+                required={true}
+                sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
@@ -133,7 +185,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Priority"
-                sx={{ color: "#e8ecf0" }}
+                sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
               >
@@ -158,11 +210,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
               multiple
               value={users}
               onChange={(e) => {
-                setUsers(
-                  typeof e.target.value === "string"
-                    ? e.target.value.split(",")
-                    : e.target.value
-                );
+                setUsers(e.target.value as string[]);
               }}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
@@ -204,7 +252,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
               color="secondary"
               sx={{ maxHeight: "44px" }}
               onClick={() => {
-                setTodos([...todos, todo]);
+                setTodos([...todos, { content: todo, completed: false }]);
                 setTodo("");
               }}
             >
@@ -215,6 +263,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
             {todos.map((todo: any, i: any) => (
               <FormControlLabel
                 key={i}
+                disabled
                 control={
                   <Checkbox
                     color="secondary"
@@ -223,7 +272,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                     }}
                   />
                 }
-                label={todo}
+                label={todo.content}
               />
             ))}
           </FormGroup>
@@ -232,7 +281,8 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
             color="secondary"
             size="small"
             sx={{ width: "90px", height: "40px", alignSelf: "flex-end" }}
-            onClick={() => console.log(title, statusId, priority, todos, users)}
+            loading={mutation.isLoading}
+            onClick={handleCreateTask}
           >
             Create
           </LoadingButton>

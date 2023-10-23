@@ -5,6 +5,11 @@ export interface WorkspaceContent {
       statuses: {
         id: string;
         type: string;
+        tasks: {
+          id: string;
+          priority: string;
+          title: string;
+        }[];
       }[];
       users: {
         user: {
@@ -30,4 +35,25 @@ export interface User {
     email: string;
     name: string;
   };
+}
+
+export interface Task {
+  title: string;
+  priority: string;
+  statusId: string;
+  users: string[];
+  todos: Todo[];
+}
+
+export interface TaskResponse {
+  createTask: {
+    id: string;
+    title: string;
+    priority: string;
+  };
+}
+
+export interface Todo {
+  completed: boolean;
+  content: string;
 }

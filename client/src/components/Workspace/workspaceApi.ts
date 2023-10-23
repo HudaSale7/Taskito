@@ -1,5 +1,5 @@
 import request, { gql } from "graphql-request";
-import { Status, User, WorkspaceContent } from "./types";
+import { Status, Task, TaskResponse, User, WorkspaceContent } from "./types";
 
 export const getWorkspace = async (workspaceId: string) => {
   const query = gql`
@@ -11,6 +11,11 @@ export const getWorkspace = async (workspaceId: string) => {
           statuses {
             id
             type
+            tasks {
+              id
+              priority
+              title
+            }
           }
           users {
             user {
@@ -97,6 +102,35 @@ export const addUserToWorkspace = async (args: {
   };
 
   const data: User = await request(
+    import.meta.env.VITE_API as string,
+    mutation,
+    variables,
+    headers
+  );
+
+  return data;
+};
+
+export const createTask = async (task: Task) => {
+  const mutation = gql`
+    mutation createTask($task: CreateTaskInput!) {
+      createTask(task: $task) {
+        id
+        title
+        priority
+      }
+    }
+  `;
+
+  const variables = {
+    task: task,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  const data: TaskResponse = await request(
     import.meta.env.VITE_API as string,
     mutation,
     variables,

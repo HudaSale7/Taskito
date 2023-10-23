@@ -45,27 +45,19 @@ function Board(props: { workspaceId: string; workspace: any }) {
             <div className="status" key={status.id}>
               <div className="status-header">
                 <div className="status-type">
-                  {status.type.toLocaleUpperCase()}
+                  {status.type}
                 </div>
                 <IconButton>
                   <MoreHorizIcon fontSize="small" color="secondary" />
                 </IconButton>
               </div>
               <div className="task-list">
-                <div className="task">
-                  <div className="title">task 1</div>
-                  <div className="priority">priority: high</div>
-                </div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
-                <div className="task">task 1</div>
+                {status.tasks && status.tasks.map((task: any) => (
+                  <div className="task" key={task.id}>
+                    <div className="title">{task.title}</div>
+                    <div className="priority">{task.priority}</div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
