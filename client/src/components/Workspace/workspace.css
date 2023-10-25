@@ -164,12 +164,13 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
+  cursor: pointer;
 }
 
-.workspace .task-form button {
+.workspace .board button {
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   right: 30px;
   z-index: 1;
 }

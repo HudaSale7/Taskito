@@ -1,5 +1,5 @@
 import request, { gql } from "graphql-request";
-import { Status, Task, TaskResponse, User, WorkspaceContent } from "./types";
+import { Status, Task, TaskCreateResponse, TaskGetResponse, User, WorkspaceContent } from "./types";
 
 export const getWorkspace = async (workspaceId: string) => {
   const query = gql`
@@ -130,7 +130,7 @@ export const createTask = async (task: Task) => {
     authorization: localStorage.token || "",
   };
 
-  const data: TaskResponse = await request(
+  const data: TaskCreateResponse = await request(
     import.meta.env.VITE_API as string,
     mutation,
     variables,
@@ -139,3 +139,63 @@ export const createTask = async (task: Task) => {
 
   return data;
 };
+
+
+export const getTask = async (taskId: string) => {
+  const query = gql`
+    query getTask($taskId: ID!) {
+      getTask(id: $taskId) {
+        id
+        title
+        priority
+        todos {
+          completed
+          content
+        }
+        users {
+          user {
+            id
+            email
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    taskId: taskId,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  const data: TaskGetResponse = await request(
+    import.meta.env.VITE_API as string,
+    query,
+    variables,
+    headers
+  );
+
+  return data;
+}
+
+export const deleteTask = (taskId: string) => {
+  const mutation = gql`
+    mutation deleteTask($taskId: ID!) {
+      deleteTask(id: $taskId) {
+        id
+      }
+    }
+  `;
+
+  const variables = {
+    taskId: taskId,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  return request(import.meta.env.VITE_API as string, mutation, variables, headers);
+}

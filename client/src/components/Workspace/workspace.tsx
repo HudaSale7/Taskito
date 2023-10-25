@@ -11,6 +11,7 @@ import { modalContext } from "./modalContext";
 
 function Workspace() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskStatusId, setTaskStatusId] = useState({taskId: "-1", statusId: "-1"});
   const { id } = useParams();
   const workspaceId = id as string;
   const query = useQuery(["workspace", id], () => getWorkspace(workspaceId));
@@ -18,7 +19,12 @@ function Workspace() {
   return (
     <>
       <modalContext.Provider
-        value={{ modal: isModalOpen, setModal: setIsModalOpen }}
+        value={{
+          modal: isModalOpen,
+          setModal: setIsModalOpen,
+          taskStatusId: taskStatusId,
+          setTaskStatusId: setTaskStatusId,
+        }}
       >
         <div className="workspace">
           {query.data && (
@@ -31,10 +37,12 @@ function Workspace() {
                 workspaceId={workspaceId}
                 workspace={query.data?.getWorkspace.workspace}
               />
-              <TaskForm
-                workspaceId={workspaceId}
-                workspace={query.data?.getWorkspace.workspace}
-              />
+              {isModalOpen && (
+                <TaskForm
+                  workspaceId={workspaceId}
+                  workspace={query.data?.getWorkspace.workspace}
+                />
+              )}
             </>
           )}
         </div>

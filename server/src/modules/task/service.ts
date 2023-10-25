@@ -107,7 +107,7 @@ const getAllUser = async (taskId: number) => {
       user: true,
     },
   });
-  return users; 
+  return users;
 };
 
 export default {

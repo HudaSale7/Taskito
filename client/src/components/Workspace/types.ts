@@ -45,11 +45,26 @@ export interface Task {
   todos: Todo[];
 }
 
-export interface TaskResponse {
+export interface TaskCreateResponse {
   createTask: {
     id: string;
     title: string;
     priority: string;
+  };
+}
+
+export interface TaskGetResponse {
+  getTask: {
+    id: string;
+    title: string;
+    priority: string;
+    users: {
+      user: {
+        id: string;
+        email: string;
+      };
+    }[];
+    todos: Todo[];
   };
 }
 

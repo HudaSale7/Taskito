@@ -9,7 +9,7 @@ const createStatus = async (workspaceId: number, status: { type: string }) => {
         },
       },
       type: status.type,
-    }
+    },
   });
 
   return result;
@@ -20,7 +20,6 @@ const deleteStatus = async (statusId: number) => {
     where: {
       id: statusId,
     },
-    
   });
   return result;
 };
@@ -30,8 +29,11 @@ const getAllTask = async (statusId: number) => {
     where: {
       statusId: statusId,
     },
+    orderBy: {
+      id: "desc",
+    },
   });
   return result;
-}
+};
 
 export default { createStatus, deleteStatus, getAllTask };

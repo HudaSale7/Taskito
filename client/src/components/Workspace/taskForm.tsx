@@ -2,8 +2,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import AddIcon from "@mui/icons-material/Add";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -16,12 +15,19 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
-import { useMutation, useQueryClient } from "react-query";
-import { createTask } from "./workspaceApi";
+import { useMutation, useQueryClient, useQuery } from "react-query";
+import { createTask, deleteTask, getTask } from "./workspaceApi";
 import { Todo } from "./types";
 import { modalContext } from "./modalContext";
+const priorityOptions = ["Urgent", "High", "Normal", "Low"];
 
 function TaskForm(props: { workspaceId: string; workspace: any }) {
+  const context = useContext(modalContext);
+  const taskId = context.taskStatusId.taskId;
+  const query = useQuery(["task", taskId], () => getTask(taskId), {
+    enabled: taskId !== "-1",
+  });
+
   const [title, setTitle] = useState("");
   const [statusId, setStatusId] = useState("");
   const [status, setStatus] = useState("");
@@ -30,11 +36,24 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
   const [todo, setTodo] = useState("");
   const [users, setUsers] = useState<string[]>([]);
   const theme = useTheme();
-  const priorityOptions = ["Urgent", "High", "Normal", "Low"];
   const queryClient = useQueryClient();
-  const context = useContext(modalContext);
 
-  const mutation = useMutation({
+  useEffect(() => {
+    if (query.data) {
+      setTitle(query.data.getTask.title);
+      setStatusId(context.taskStatusId.statusId);
+      setPriority(query.data.getTask.priority);
+      setUsers(query.data.getTask.users.map((user: any) => user.user.email));
+      setTodos(query.data.getTask.todos);
+      setStatus(
+        props.workspace.statuses.find(
+          (status: any) => status.id === context.taskStatusId.statusId
+        )?.type || ""
+      );
+    }
+  }, [context.taskStatusId.statusId, props.workspace, query.data]);
+
+  const createMutation = useMutation({
     mutationFn: createTask,
     onSuccess: (data) => {
       queryClient.setQueryData(
@@ -47,7 +66,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                 statuses: oldData.getWorkspace.workspace.statuses.map(
                   (status: any) => {
                     if (status.id === statusId) {
-                      status.tasks.push(data.createTask);
+                      status.tasks.unshift(data.createTask);
                       return status;
                     }
                     return status;
@@ -61,15 +80,37 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      handleCreateTask();
+    },
+  });
+
   const handleCreateTask = () => {
-    mutation.mutate({
+    if (!title) return;
+    if (!statusId) return;
+    if (!priority) return;
+
+    createMutation.mutate({
       title,
       statusId,
       priority,
       users,
       todos,
     });
+
+    handleCloseModal();
+  };
+
+  const handleCompleteTodo = (checked: boolean, i: number) => {
+    todos[i].completed = checked;
+    setTodos([...todos]);
+  };
+
+  const handleCloseModal = () => {
     context.setModal(false);
+    context.setTaskStatusId({ taskId: "-1", statusId: "-1" });
     setTitle("");
     setStatus("");
     setPriority("");
@@ -83,7 +124,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "calc(100% - 200px)",
+    width: "calc(100% - 400px)",
     maxHeight: "100%",
     bgcolor: theme.palette.primary.light,
     color: "#e8ecf0",
@@ -127,17 +168,9 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   return (
     <div className="task-form">
-      <Button
-        onClick={() => context.setModal(true)}
-        color="secondary"
-        variant="contained"
-      >
-        <AddIcon fontSize="small" />
-        Task
-      </Button>
       <Modal
         open={context.modal}
-        onClose={() => context.setModal(false)}
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -263,7 +296,8 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
             {todos.map((todo: any, i: any) => (
               <FormControlLabel
                 key={i}
-                disabled
+                onChange={(_, checked) => handleCompleteTodo(checked, i)}
+                checked={todo.completed}
                 control={
                   <Checkbox
                     color="secondary"
@@ -281,10 +315,14 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
             color="secondary"
             size="small"
             sx={{ width: "90px", height: "40px", alignSelf: "flex-end" }}
-            loading={mutation.isLoading}
-            onClick={handleCreateTask}
+            loading={createMutation.isLoading || deleteMutation.isLoading}
+            onClick={() => {
+              taskId === "-1"
+                ? handleCreateTask
+                : deleteMutation.mutate(taskId);
+            }}
           >
-            Create
+            {taskId !== "-1" ? "Update" : "Create"}
           </LoadingButton>
         </Box>
       </Modal>
