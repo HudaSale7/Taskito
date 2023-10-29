@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import "./navbar.css";
 import { useTheme } from "@mui/material/styles";
 import { LoadingButton } from "@mui/lab";
@@ -9,6 +9,7 @@ import { createWorkspace } from "./navbarApi";
 function NavBar() {
   const theme = useTheme();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const handleCreateWorkspace = async () => {
     const { value: title } = await Swal.fire({
@@ -35,8 +36,9 @@ function NavBar() {
 
   const mutation = useMutation({
     mutationFn: createWorkspace,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(["workspaces"]);
+      navigate(`/workspace/${data.createWorkspace.id}`);
     },
   });
 

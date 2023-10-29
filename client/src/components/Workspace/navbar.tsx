@@ -94,7 +94,7 @@ function NavBar(props: { workspace: any, workspaceId: string }) {
           <div className="add-user">
             <AddIcon onClick={handleAddUser} />
           </div>
-          <AvatarGroup max={4} onClick={() => console.log("avatar")}>
+          <AvatarGroup max={4}>
             {props.workspace.users.map((user: any) => (
               <Avatar key={user.user.id} {...stringAvatar(user.user.name)} />
             ))}

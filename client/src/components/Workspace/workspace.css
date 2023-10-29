@@ -93,12 +93,16 @@
   color: #e8ecf0;
 }
 
-.workspace .navbar .users div {
+.workspace .navbar .users div,
+.css-1ytufz-MuiAvatarGroup-root .MuiAvatar-root  {
   border: none !important;
   width: 30px !important;
   height: 30px !important;
   font-size: 14px !important;
-  cursor: pointer;
+}
+
+.board .status-list .status .task-list .task .title .head {
+  max-width: 80%;
 }
 
 .workspace .navbar .users {
@@ -127,7 +131,6 @@
   gap: 10px;
   overflow-y: auto;
   max-height: calc(100% - 60px);
-  padding-right: 5px;
 }
 
 .workspace .board .status-list .status .task-list::-webkit-scrollbar {
@@ -168,9 +171,19 @@
   cursor: pointer;
 }
 
-.workspace .board button {
-  position: absolute;
-  bottom: 30px;
+.board .status-list .status .task-list .task .todosCount {
+  display: flex;
+  gap: 10px;
+}
+
+.board .status-list .status .task-list .task .title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.workspace .board .add-task button {
+  position: fixed;
+  bottom: 40px;
   right: 30px;
   z-index: 1;
 }

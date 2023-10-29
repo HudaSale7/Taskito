@@ -8,6 +8,7 @@ import NavBar from "./navbar";
 import TaskForm from "./taskForm";
 import { useState } from "react";
 import { modalContext } from "./modalContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Workspace() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,19 @@ function Workspace() {
   const { id } = useParams();
   const workspaceId = id as string;
   const query = useQuery(["workspace", id], () => getWorkspace(workspaceId));
+
+  if (query.isLoading) {
+    return (
+      <div className="workspace">
+        <CircularProgress
+          color="secondary"
+          disableShrink
+          sx={{ alignSelf: "center", marginTop: "20%" }}
+          size={60}
+        />
+      </div>
+    );
+  }
 
   return (
     <>

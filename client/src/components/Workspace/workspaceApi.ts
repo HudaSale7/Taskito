@@ -15,6 +15,15 @@ export const getWorkspace = async (workspaceId: string) => {
               id
               priority
               title
+              todos {
+                completed
+              }
+              users {
+                user {
+                  id
+                  name
+                }
+              }
             }
           }
           users {
@@ -118,6 +127,15 @@ export const createTask = async (task: Task) => {
         id
         title
         priority
+        todos {
+          completed
+        }
+        users {
+          user {
+            id
+            name
+          }
+        }
       }
     }
   `;
@@ -191,6 +209,26 @@ export const deleteTask = (taskId: string) => {
 
   const variables = {
     taskId: taskId,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  return request(import.meta.env.VITE_API as string, mutation, variables, headers);
+}
+
+export const deleteStatus = (statusId: string) => {
+  const mutation = gql`
+    mutation deleteStatus($statusId: ID!) {
+      deleteStatus(statusId: $statusId) {
+        id
+      }
+    }
+  `;
+
+  const variables = {
+    statusId: statusId,
   };
 
   const headers = {

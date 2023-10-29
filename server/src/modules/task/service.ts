@@ -26,21 +26,27 @@ const createTask = async (args: CreateTaskArgs) => {
       },
     },
   });
-  args.users.map(async (email) => {
-    const connectUsersToTask = await prisma.userTask.create({
-      data: {
-        user: {
-          connect: {
-            email: email,
-          },
-        },
-        task: {
-          connect: {
-            id: task.id,
-          },
-        },
+
+  const usersId = await prisma.user.findMany({
+    where: {
+      email: {
+        in: args.users,
       },
-    });
+    },
+    select: {
+      id: true,
+    },
+  }) 
+
+  const userTaskConnect = usersId.map((user) => {
+    return {
+      userId: user.id,
+      taskId: task.id,
+    };
+  })
+
+  const connectUsersToTask = await prisma.userTask.createMany({
+    data: userTaskConnect,
   });
   return task;
 };

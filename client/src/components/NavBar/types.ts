@@ -3,6 +3,8 @@ export interface Workspace {
 }
 
 export interface RespondedWorkspace {
-  title: string;
-  id: string;
+  createWorkspace: {
+    title: string;
+    id: string;
+  };
 }

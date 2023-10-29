@@ -19,6 +19,7 @@ import { useMutation, useQueryClient, useQuery } from "react-query";
 import { createTask, deleteTask, getTask } from "./workspaceApi";
 import { Todo } from "./types";
 import { modalContext } from "./modalContext";
+import CircularProgress from "@mui/material/CircularProgress";
 const priorityOptions = ["Urgent", "High", "Normal", "Low"];
 
 function TaskForm(props: { workspaceId: string; workspace: any }) {
@@ -55,28 +56,9 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   const createMutation = useMutation({
     mutationFn: createTask,
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["workspace", props.workspaceId],
-        (oldData: any) => {
-          return {
-            getWorkspace: {
-              workspace: {
-                ...oldData.getWorkspace.workspace,
-                statuses: oldData.getWorkspace.workspace.statuses.map(
-                  (status: any) => {
-                    if (status.id === statusId) {
-                      status.tasks.unshift(data.createTask);
-                      return status;
-                    }
-                    return status;
-                  }
-                ),
-              },
-            },
-          };
-        }
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries(["workspace", props.workspaceId]);
+      handleCloseModal();
     },
   });
 
@@ -99,8 +81,6 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
       users,
       todos,
     });
-
-    handleCloseModal();
   };
 
   const handleCompleteTodo = (checked: boolean, i: number) => {
@@ -119,7 +99,6 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
     setTodo("");
   };
 
-  
   const style = {
     position: "absolute",
     top: "50%",
@@ -127,6 +106,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
     transform: "translate(-50%, -50%)",
     width: "calc(100% - 400px)",
     maxHeight: "100%",
+    minHeight: "500px",
     bgcolor: theme.palette.primary.light,
     color: "#e8ecf0",
     boxShadow: 24,
@@ -167,6 +147,8 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
     };
   }
 
+  const openModal = query.isSuccess || taskId === "-1";
+
   return (
     <div className="task-form">
       <Modal
@@ -176,155 +158,182 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="outlined-basic"
-            label="Task title"
-            name="title"
-            color="secondary"
-            sx={{ mb: 0, mt: 0 }}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Box sx={{ display: "flex", gap: "1rem" }}>
-            <FormControl sx={{ width: "50%" }}>
-              <InputLabel id="demo-simple-select-label">Status</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Status"
-                required={true}
-                sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                {props.workspace.statuses.map((status: any) => (
-                  <MenuItem
-                    value={status.type}
-                    key={status.id}
-                    onClick={() => setStatusId(status.id)}
-                    sx={{ "&:hover": { bgcolor: theme.palette.primary.light } }}
-                  >
-                    {status.type}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ width: "50%" }}>
-              <InputLabel id="demo-simple-select-label">Priority</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Priority"
-                sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-              >
-                {priorityOptions.map((p: any, i: any) => (
-                  <MenuItem
-                    value={p}
-                    key={i}
-                    sx={{ "&:hover": { bgcolor: theme.palette.primary.light } }}
-                  >
-                    {p}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <FormControl fullWidth>
-            <InputLabel id="demo-multiple-chip-label">Users</InputLabel>
-            <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              sx={{ color: "#e8ecf0" }}
-              multiple
-              value={users}
-              onChange={(e) => {
-                setUsers(e.target.value as string[]);
-              }}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={value}
-                      sx={{
-                        color: "#e8ecf0",
-                        bgcolor: theme.palette.primary.main,
-                      }}
-                    />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {props.workspace.users.map((user: any) => (
-                <MenuItem
-                  key={user.user.id}
-                  value={user.user.email}
-                  style={getStyles(user.user.email, users)}
-                >
-                  {user.user.email}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <h2>ToDos</h2>
-          <Box sx={{ display: "flex", gap: "1rem", width: "100%" }}>
-            <textarea
-              className="textarea"
-              value={todo}
-              onChange={(e) => setTodo(e.target.value)}
-            />
-            <Button
-              variant="contained"
+          {query.isLoading && (
+            <CircularProgress
               color="secondary"
-              sx={{ maxHeight: "44px" }}
-              onClick={() => {
-                setTodos([...todos, { content: todo, completed: false }]);
-                setTodo("");
-              }}
-            >
-              Add
-            </Button>
-          </Box>
-          <FormGroup>
-            {todos.map((todo: any, i: any) => (
-              <FormControlLabel
-                key={i}
-                onChange={(_, checked) => handleCompleteTodo(checked, i)}
-                checked={todo.completed}
-                control={
-                  <Checkbox
-                    color="secondary"
-                    sx={{
-                      color: theme.palette.secondary.main,
-                    }}
-                  />
-                }
-                label={todo.content}
+              disableShrink
+              sx={{ alignSelf: "center" }}
+            />
+          )}
+          {openModal && (
+            <>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="outlined-basic"
+                label="Task title"
+                name="title"
+                color="secondary"
+                sx={{ mb: 0, mt: 0 }}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
-            ))}
-          </FormGroup>
-          <LoadingButton
-            variant="contained"
-            color="secondary"
-            size="small"
-            sx={{ width: "90px", height: "40px", alignSelf: "flex-end" }}
-            loading={createMutation.isLoading || deleteMutation.isLoading}
-            onClick={() => {
-              taskId === "-1"
-                ? handleCreateTask
-                : deleteMutation.mutate(taskId);
-            }}
-          >
-            {taskId !== "-1" ? "Update" : "Create"}
-          </LoadingButton>
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <FormControl sx={{ width: "50%" }}>
+                  <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Status"
+                    required={true}
+                    sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    {props.workspace.statuses.map((status: any) => (
+                      <MenuItem
+                        value={status.type}
+                        key={status.id}
+                        onClick={() => setStatusId(status.id)}
+                        sx={{
+                          "&:hover": {
+                            bgcolor: theme.palette.primary.light,
+                          },
+                        }}
+                      >
+                        {status.type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ width: "50%" }}>
+                  <InputLabel id="demo-simple-select-label">
+                    Priority
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Priority"
+                    sx={{ color: "#e8ecf0", borderColor: "#9fadbc" }}
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                  >
+                    {priorityOptions.map((p: any, i: any) => (
+                      <MenuItem
+                        value={p}
+                        key={i}
+                        sx={{
+                          "&:hover": {
+                            bgcolor: theme.palette.primary.light,
+                          },
+                        }}
+                      >
+                        {p}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <FormControl fullWidth>
+                <InputLabel id="demo-multiple-chip-label">Users</InputLabel>
+                <Select
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  sx={{ color: "#e8ecf0" }}
+                  multiple
+                  value={users}
+                  onChange={(e) => {
+                    setUsers(e.target.value as string[]);
+                  }}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Chip" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip
+                          key={value}
+                          label={value}
+                          sx={{
+                            color: "#e8ecf0",
+                            bgcolor: theme.palette.primary.main,
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {props.workspace.users.map((user: any) => (
+                    <MenuItem
+                      key={user.user.id}
+                      value={user.user.email}
+                      style={getStyles(user.user.email, users)}
+                    >
+                      {user.user.email}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <h2>ToDos</h2>
+              <Box sx={{ display: "flex", gap: "1rem", width: "100%" }}>
+                <textarea
+                  className="textarea"
+                  value={todo}
+                  onChange={(e) => setTodo(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ maxHeight: "44px" }}
+                  onClick={() => {
+                    setTodos([...todos, { content: todo, completed: false }]);
+                    setTodo("");
+                  }}
+                >
+                  Add
+                </Button>
+              </Box>
+              <FormGroup>
+                {todos.map((todo: any, i: any) => (
+                  <FormControlLabel
+                    key={i}
+                    onChange={(_, checked) => handleCompleteTodo(checked, i)}
+                    checked={todo.completed}
+                    control={
+                      <Checkbox
+                        color="secondary"
+                        sx={{
+                          color: theme.palette.secondary.main,
+                        }}
+                      />
+                    }
+                    label={todo.content}
+                  />
+                ))}
+              </FormGroup>
+              <LoadingButton
+                variant="contained"
+                color="secondary"
+                size="small"
+                sx={{
+                  width: "90px",
+                  height: "40px",
+                  alignSelf: "flex-end",
+                }}
+                loading={createMutation.isLoading || deleteMutation.isLoading }
+                onClick={() => {
+                  taskId === "-1"
+                    ? handleCreateTask()
+                    : deleteMutation.mutate(taskId);
+                }}
+              >
+                {taskId !== "-1" ? "Update" : "Create"}
+              </LoadingButton>
+            </>
+          )}
         </Box>
       </Modal>
     </div>

@@ -9,6 +9,15 @@ export interface WorkspaceContent {
           id: string;
           priority: string;
           title: string;
+          todos: {
+            completed: boolean;
+          }[];
+          users: {
+            user: {
+              id: string;
+              name: string;
+            };
+          }[];
         }[];
       }[];
       users: {
@@ -21,6 +30,7 @@ export interface WorkspaceContent {
     };
   };
 }
+
 
 export interface Status {
   createStatus: {
@@ -50,6 +60,13 @@ export interface TaskCreateResponse {
     id: string;
     title: string;
     priority: string;
+    users: {
+      user: {
+        id: string;
+        email: string;
+      };
+    }[];
+    todos: Todo[];
   };
 }
 
