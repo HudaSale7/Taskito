@@ -2,11 +2,11 @@
 import "./workspace.css";
 import { useMutation, useQueryClient } from "react-query";
 import { createStatus, deleteStatus } from "./workspaceApi";
-import { Status } from "./types";
+import { Status, DisplayTask } from "./types";
 import { useState, useContext } from "react";
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { modalContext } from "./modalContext";
+import { modalContext } from "./context/modalContext";
 import AddIcon from "@mui/icons-material/Add";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Button from "@mui/material/Button";
@@ -15,11 +15,14 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import FlagIcon from "@mui/icons-material/Flag";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CircularProgress from "@mui/material/CircularProgress";
+import { PriorityColors } from "./types";
 
 function Board(props: { workspaceId: string; workspace: any }) {
   const queryClient = useQueryClient();
   const context = useContext(modalContext);
   const [inputStatus, setInputStatus] = useState("");
+  const [activeMenu, setActiveMenu] = useState("");
 
   const mutation = useMutation({
     mutationFn: createStatus,
@@ -74,7 +77,7 @@ function Board(props: { workspaceId: string; workspace: any }) {
           };
         }
       );
-    }
+    },
   });
 
   const getTodosCount = (todos: any) => {
@@ -84,9 +87,7 @@ function Board(props: { workspaceId: string; workspace: any }) {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -127,6 +128,14 @@ function Board(props: { workspaceId: string; workspace: any }) {
   return (
     <>
       <div className="board">
+        {deleteStatusMutation.isLoading && (
+          <CircularProgress
+            color="secondary"
+            disableShrink
+            sx={{ position: "absolute", top: "5px", left: "50%", zIndex: 99 }}
+            size={40}
+          />
+        )}
         <div className="status-list">
           {props.workspace.statuses.map((status: any) => (
             <div className="status" key={status.id}>
@@ -137,14 +146,17 @@ function Board(props: { workspaceId: string; workspace: any }) {
                   aria-controls={open ? "basic-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                    setAnchorEl(event.currentTarget);
+                    setActiveMenu(status.id);
+                  }}
                 >
                   <MoreHorizIcon fontSize="small" color="secondary" />
                 </IconButton>
                 <Menu
                   id="basic-menu"
                   anchorEl={anchorEl}
-                  open={open}
+                  open={open && activeMenu === status.id}
                   onClose={handleClose}
                   MenuListProps={{
                     "aria-labelledby": "basic-button",
@@ -153,7 +165,6 @@ function Board(props: { workspaceId: string; workspace: any }) {
                   <MenuItem
                     onClick={() => {
                       handleDeleteStatus(status.id);
-                      console.log(status.id);
                     }}
                   >
                     Delete
@@ -162,7 +173,7 @@ function Board(props: { workspaceId: string; workspace: any }) {
               </div>
               <div className="task-list">
                 {status.tasks &&
-                  status.tasks.map((task: any) => (
+                  status.tasks.map((task: DisplayTask) => (
                     <div
                       className="task"
                       key={task.id}
@@ -182,8 +193,8 @@ function Board(props: { workspaceId: string; workspace: any }) {
                           ))}
                         </AvatarGroup>
                       </div>
-                      {/* <div className="priority">{task.priority}</div> */}
-                      <FlagIcon />
+
+                      <FlagIcon sx={{ color: PriorityColors[task.priority] }} />
                       {task.todos.length > 0 && (
                         <div className="todosCount">
                           <TaskAltIcon fontSize="small" color="secondary" />
@@ -195,6 +206,18 @@ function Board(props: { workspaceId: string; workspace: any }) {
               </div>
             </div>
           ))}
+          {mutation.isLoading && (
+            <div className="status">
+              <div className="status-header">
+                <CircularProgress
+                  color="secondary"
+                  disableShrink
+                  sx={{ alignSelf: "center" }}
+                  size={30}
+                />
+              </div>
+            </div>
+          )}
           <div className="status">
             <input
               type="text"

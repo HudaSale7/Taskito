@@ -2,14 +2,19 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation, useQueryClient } from "react-query";
-import { addUserToWorkspace } from "./workspaceApi";
+import { addUserToWorkspace, deleteWorkspace } from "./workspaceApi";
 import Swal from "sweetalert2";
 import { useTheme } from "@mui/material/styles";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router";
+import CircularProgress from "@mui/material/CircularProgress";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function NavBar(props: { workspace: any, workspaceId: string }) {
+function NavBar(props: { workspace: any; workspaceId: string }) {
   const queryClient = useQueryClient();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleAddUser = async () => {
     const { value: email } = await Swal.fire({
@@ -30,32 +35,64 @@ function NavBar(props: { workspace: any, workspaceId: string }) {
       },
     });
     if (email) {
-      mutation.mutate({ workspaceId: props.workspaceId, userEmail: email});
+      addUserMutation.mutate({
+        workspaceId: props.workspaceId,
+        userEmail: email,
+      });
     }
   };
-  const mutation = useMutation({
+
+  const handleDeleteWorkspace = async (id: string) => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      confirmButtonColor: theme.palette.secondary.main,
+      background: theme.palette.primary.main,
+      color: "white",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+    if (isConfirmed) {
+      deleteWorkspaceMutation.mutate(id);
+    }
+  };
+
+  const addUserMutation = useMutation({
     mutationFn: addUserToWorkspace,
     onSuccess: (data) => {
-      queryClient.setQueryData(
-        ["workspace", props.workspace.id],
-        (old: any) => {
-          return {
-            getWorkspace: {
-              workspace: {
-                ...old.getWorkspace.workspace,
-                users: [
-                  ...old.getWorkspace.workspace.users,
-                  {
-                    user: {
-                      ...data.addUserToWorkspace,
-                    },
+      queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
+        return {
+          getWorkspace: {
+            workspace: {
+              ...old.getWorkspace.workspace,
+              users: [
+                ...old.getWorkspace.workspace.users,
+                {
+                  user: {
+                    ...data.addUserToWorkspace,
                   },
-                ],
-              },
+                },
+              ],
             },
-          };
-        }
-      );
+          },
+        };
+      });
+    },
+  });
+
+  const deleteWorkspaceMutation = useMutation({
+    mutationFn: deleteWorkspace,
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["workspaces"], (old: any) => {
+        return {
+          getAllWorkspace: old.getAllWorkspace.filter(
+            (workspace: any) =>
+              workspace.workspace.id !== data.deleteWorkspace.id
+          ),
+        };
+      });
+      navigate("/workspace");
     },
   });
 
@@ -89,7 +126,18 @@ function NavBar(props: { workspace: any, workspaceId: string }) {
   return (
     <>
       <div className="navbar">
-        <div className="workspace-name">{props.workspace.title}</div>
+        <div className="workspace-info">
+          <div className="workspace-name">{props.workspace.title}</div>
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDeleteWorkspace(props.workspaceId)}
+          >
+            <DeleteIcon color="secondary" fontSize="small" />
+          </IconButton>
+          {(deleteWorkspaceMutation.isLoading || addUserMutation.isLoading) && (
+            <CircularProgress color="secondary" disableShrink size={25} />
+          )}
+        </div>
         <div className="users">
           <div className="add-user">
             <AddIcon onClick={handleAddUser} />

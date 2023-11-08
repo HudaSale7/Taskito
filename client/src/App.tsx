@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import NavBar from "./components/NavBar/navbar";
-import Intro from "./components/Intro/intro";
+import LandingPage from "./components/LandingPage/landingPage";
 import Login from "./components/Login/login";
 import SignUp from "./components/SignUp/signup";
 import SideBar from "./components/SideBar/sidebar";
@@ -11,7 +11,7 @@ function App() {
     <>
       <Routes>
         <Route element={<NavBar />}>
-          <Route path="/" element={<Intro />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/workspace" element={<SideBar />}>

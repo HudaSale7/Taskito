@@ -16,6 +16,7 @@ export const taskTypes = /* GraphQL */ `
     createTask(task: CreateTaskInput!): Task!
     deleteTask(id: ID!): Task!
     addUserToTask(taskId: ID!, userEmail: String!): Task!
+    updateTask(taskId: ID!, task: CreateTaskInput!): Task!
   }
   input CreateTaskInput {
     title: String!

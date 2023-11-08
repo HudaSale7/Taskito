@@ -25,7 +25,7 @@ function SignUp() {
     },
   });
   return (
-    <>
+    <div className="layer">
       <Box
         sx={{
           marginTop: 8,
@@ -90,7 +90,7 @@ function SignUp() {
         </Box>
       </Box>
       <Outlet />
-    </>
+    </div>
   );
 }
 

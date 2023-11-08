@@ -16,9 +16,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { LoadingButton } from "@mui/lab";
 import { useMutation, useQueryClient, useQuery } from "react-query";
-import { createTask, deleteTask, getTask } from "./workspaceApi";
+import { createTask, deleteTask, getTask, updateTask } from "./workspaceApi";
 import { Todo } from "./types";
-import { modalContext } from "./modalContext";
+import { modalContext } from "./context/modalContext";
 import CircularProgress from "@mui/material/CircularProgress";
 const priorityOptions = ["Urgent", "High", "Normal", "Low"];
 
@@ -56,8 +56,72 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   const createMutation = useMutation({
     mutationFn: createTask,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["workspace", props.workspaceId]);
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
+        return {
+          getWorkspace: {
+            workspace: {
+              ...old.getWorkspace.workspace,
+              statuses: old.getWorkspace.workspace.statuses.map(
+                (status: any) => {
+                  if (status.id === statusId) {
+                    return {
+                      ...status,
+                      tasks: [...status.tasks, data.createTask],
+                    };
+                  } else {
+                    return status;
+                  }
+                }
+              ),
+            },
+          },
+        };
+      });
+      handleCloseModal();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateTask,
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
+        return {
+          getWorkspace: {
+            workspace: {
+              ...old.getWorkspace.workspace,
+              statuses: old.getWorkspace.workspace.statuses.map(
+                (status: any) => {
+                  if (status.id === statusId) {
+                    return {
+                      ...status,
+                      tasks:
+                        statusId === context.taskStatusId.statusId
+                          ? status.tasks.map((task: any) => {
+                              if (task.id === taskId) {
+                                return data.updateTask;
+                              } else {
+                                return task;
+                              }
+                            })
+                          : [data.updateTask, ...status.tasks],
+                    };
+                  } else if (status.id === context.taskStatusId.statusId) {
+                    return {
+                      ...status,
+                      tasks: status.tasks.filter(
+                        (task: any) => task.id !== taskId
+                      ),
+                    };
+                  } else {
+                    return status;
+                  }
+                }
+              ),
+            },
+          },
+        };
+      });
       handleCloseModal();
     },
   });
@@ -65,7 +129,30 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
     onSuccess: () => {
-      handleCreateTask();
+      queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
+        return {
+          getWorkspace: {
+            workspace: {
+              ...old.getWorkspace.workspace,
+              statuses: old.getWorkspace.workspace.statuses.map(
+                (status: any) => {
+                  if (status.id === statusId) {
+                    return {
+                      ...status,
+                      tasks: status.tasks.filter(
+                        (task: any) => task.id !== taskId
+                      ),
+                    };
+                  } else {
+                    return status;
+                  }
+                }
+              ),
+            },
+          },
+        };
+      }),
+        handleCloseModal();
     },
   });
 
@@ -81,6 +168,21 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
       users,
       todos,
     });
+  };
+
+  const handleUpdateTask = () => {
+    if (!title) return;
+    if (!statusId) return;
+    if (!priority) return;
+    const newTask = {
+      title,
+      statusId,
+      priority,
+      users,
+      todos,
+    };
+
+    updateMutation.mutate({ taskId, task: newTask });
   };
 
   const handleCompleteTodo = (checked: boolean, i: number) => {
@@ -314,24 +416,40 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                   />
                 ))}
               </FormGroup>
-              <LoadingButton
-                variant="contained"
-                color="secondary"
-                size="small"
-                sx={{
-                  width: "90px",
-                  height: "40px",
-                  alignSelf: "flex-end",
-                }}
-                loading={createMutation.isLoading || deleteMutation.isLoading }
-                onClick={() => {
-                  taskId === "-1"
-                    ? handleCreateTask()
-                    : deleteMutation.mutate(taskId);
-                }}
-              >
-                {taskId !== "-1" ? "Update" : "Create"}
-              </LoadingButton>
+              <div className="buttons">
+                <LoadingButton
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  sx={{
+                    width: "90px",
+                    height: "40px",
+                  }}
+                  loading={createMutation.isLoading || updateMutation.isLoading}
+                  onClick={() => {
+                    taskId === "-1" ? handleCreateTask() : handleUpdateTask();
+                  }}
+                >
+                  {taskId !== "-1" ? "Update" : "Create"}
+                </LoadingButton>
+                {taskId !== "-1" && (
+                  <LoadingButton
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    sx={{
+                      width: "90px",
+                      height: "40px",
+                    }}
+                    loading={deleteMutation.isLoading}
+                    onClick={() => {
+                      deleteMutation.mutate(taskId);
+                    }}
+                  >
+                    delete
+                  </LoadingButton>
+                )}
+              </div>
             </>
           )}
         </Box>

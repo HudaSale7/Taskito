@@ -55,6 +55,15 @@ export interface Task {
   todos: Todo[];
 }
 
+export interface DisplayTask {
+  id: string;
+  title: string;
+  priority: "Urgent" | "High" | "Normal" | "Low";
+  statusId: string;
+  users: string[];
+  todos: Todo[];
+}
+
 export interface TaskCreateResponse {
   createTask: {
     id: string;
@@ -89,3 +98,11 @@ export interface Todo {
   completed: boolean;
   content: string;
 }
+
+export const PriorityColors = {
+  "Urgent": "#FF0000",
+  "High": "#FFA500",
+  "Normal": "#FFFF00",
+  "Low": "#008000",
+}
+

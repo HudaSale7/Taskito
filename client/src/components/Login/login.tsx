@@ -24,7 +24,7 @@ function Login() {
     },
   });
   return (
-    <>
+    <div className="layer">
       <Box
         sx={{
           marginTop: 8,
@@ -81,7 +81,7 @@ function Login() {
         </Box>
       </Box>
       <Outlet />
-    </>
+    </div>
   );
 }
 

@@ -7,12 +7,15 @@ import Board from "./board";
 import NavBar from "./navbar";
 import TaskForm from "./taskForm";
 import { useState } from "react";
-import { modalContext } from "./modalContext";
+import { modalContext } from "./context/modalContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Workspace() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [taskStatusId, setTaskStatusId] = useState({taskId: "-1", statusId: "-1"});
+  const [taskStatusId, setTaskStatusId] = useState({
+    taskId: "-1",
+    statusId: "-1",
+  });
   const { id } = useParams();
   const workspaceId = id as string;
   const query = useQuery(["workspace", id], () => getWorkspace(workspaceId));

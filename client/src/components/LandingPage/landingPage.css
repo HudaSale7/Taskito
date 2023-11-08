@@ -1,0 +1,39 @@
+.landing-page {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: rgb(31, 38, 46);
+  background: linear-gradient(
+    90deg,
+    rgba(31, 38, 46, 1) 0%,
+    rgba(144, 66, 231, 1) 72%,
+    rgba(144, 202, 249, 1) 100%
+  );
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.landing-page .intro-text {
+  color: #e8ecf0;
+  padding: 20px;
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  justify-content: center;
+  align-items: flex-start;
+  transform: translate(0, -50px);
+  margin-left: 80px;
+}
+
+.landing-page .intro-text p {
+  font-weight: 400;
+  font-size: 25px;
+  letter-spacing: 2px;
+  line-height: 1.5;
+}
+
+.landing-page .intro-image {
+  width: 40%;
+}

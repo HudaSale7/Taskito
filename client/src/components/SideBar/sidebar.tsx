@@ -4,18 +4,24 @@ import "./sidebar.css";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 import { useQuery } from "react-query";
 import { getWorkspaces } from "./sidebarApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function SideBar() {
   const theme = useTheme();
   const { id } = useParams();
+  const workspaceId = id ? id : "-1";
   const query = useQuery(["workspaces"], getWorkspaces);
-  const [selected, setSelected] = useState(id? id: "-1");
+  const [selected, setSelected] = useState(workspaceId);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setSelected(workspaceId);
+  }, [workspaceId]);
+
   const navigateToWorkspace = (id: string) => {
-    setSelected(id);
     navigate(`/workspace/${id}`);
   };
+
   return (
     <>
       <div

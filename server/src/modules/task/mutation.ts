@@ -36,6 +36,19 @@ export const taskMutation = {
     return task;
   },
 
+  updateTask: async (
+    _: any,
+    args: { taskId: string; task: CreateTaskArgs },
+    contextValue: any
+  ) => {
+    checkAuthentication(contextValue);
+    const result = await service.deleteTask(Number(args.taskId));
+    checkForServerError(result);
+    const task = await service.createTask(args.task);
+    checkForServerError(task);
+    return task;
+  },
+
   addUserToTask: async (
     _: any,
     args: { taskId: string; userEmail: string },

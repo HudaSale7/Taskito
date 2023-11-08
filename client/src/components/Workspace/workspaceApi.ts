@@ -1,5 +1,12 @@
 import request, { gql } from "graphql-request";
-import { Status, Task, TaskCreateResponse, TaskGetResponse, User, WorkspaceContent } from "./types";
+import {
+  Status,
+  Task,
+  TaskCreateResponse,
+  TaskGetResponse,
+  User,
+  WorkspaceContent,
+} from "./types";
 
 export const getWorkspace = async (workspaceId: string) => {
   const query = gql`
@@ -158,6 +165,44 @@ export const createTask = async (task: Task) => {
   return data;
 };
 
+export const updateTask = async (args: {taskId: string, task: Task}) => {
+  const mutation = gql`
+    mutation updateTask($taskId: ID!, $task: CreateTaskInput!) {
+      updateTask(taskId: $taskId, task: $task) {
+        id
+        title
+        priority
+        todos {
+          completed
+        }
+        users {
+          user {
+            id
+            name
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    taskId: args.taskId,
+    task: args.task,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  const data: TaskCreateResponse = await request(
+    import.meta.env.VITE_API as string,
+    mutation,
+    variables,
+    headers
+  );
+
+  return data;
+};
 
 export const getTask = async (taskId: string) => {
   const query = gql`
@@ -196,7 +241,7 @@ export const getTask = async (taskId: string) => {
   );
 
   return data;
-}
+};
 
 export const deleteTask = (taskId: string) => {
   const mutation = gql`
@@ -215,8 +260,13 @@ export const deleteTask = (taskId: string) => {
     authorization: localStorage.token || "",
   };
 
-  return request(import.meta.env.VITE_API as string, mutation, variables, headers);
-}
+  return request(
+    import.meta.env.VITE_API as string,
+    mutation,
+    variables,
+    headers
+  );
+};
 
 export const deleteStatus = (statusId: string) => {
   const mutation = gql`
@@ -235,5 +285,35 @@ export const deleteStatus = (statusId: string) => {
     authorization: localStorage.token || "",
   };
 
-  return request(import.meta.env.VITE_API as string, mutation, variables, headers);
-}
+  return request(
+    import.meta.env.VITE_API as string,
+    mutation,
+    variables,
+    headers
+  );
+};
+
+export const deleteWorkspace = async (workspaceId: string) => {
+  const mutation = gql`
+    mutation deleteWorkspace($deleteWorkspaceId: ID!) {
+      deleteWorkspace(id: $deleteWorkspaceId) {
+        id
+      }
+    }
+  `;
+
+  const variables = {
+    deleteWorkspaceId: workspaceId,
+  };
+
+  const headers = {
+    authorization: localStorage.token || "",
+  };
+
+  return request(
+    import.meta.env.VITE_API as string,
+    mutation,
+    variables,
+    headers
+  );
+};

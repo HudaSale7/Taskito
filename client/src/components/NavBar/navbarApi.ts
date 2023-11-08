@@ -5,6 +5,7 @@ export const createWorkspace = async (workspace: Workspace) => {
   const mutation = gql`
     mutation createMutation($workspace: WorkspaceCreateInput!) {
       createWorkspace(workspace: $workspace) {
+        id
         title
       }
     }

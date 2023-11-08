@@ -91,6 +91,13 @@
   z-index: 1;
   justify-content: space-between;
   color: #e8ecf0;
+  top: 50px;
+}
+
+.workspace .navbar .workspace-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .workspace .navbar .users div,
@@ -200,3 +207,9 @@
   color: #90caf9 !important;
 }
 
+.css-79ws1d-MuiModal-root .buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-self: flex-end;
+}
