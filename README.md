@@ -17,9 +17,9 @@ Taskito is a task management web application designed to help individuals and te
 
 ![Database Design](./docs/schema.png)
 
-## 3. Demo
+## 4. Demo
 
-## 4. Technologies
+## 5. Technologies
 
 - ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
@@ -37,7 +37,7 @@ Taskito is a task management web application designed to help individuals and te
 
 - ![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)
 
-## 5. To-Do
+## 6. To-Do
 
 - [ ] Drag and drop tasks
 - [ ] Filter tasks
