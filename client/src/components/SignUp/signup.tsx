@@ -21,7 +21,7 @@ function SignUp() {
       localStorage.token = data.signup.token;
       localStorage.userId = data.signup.id;
       localStorage.name = data.signup.name;
-      navigate(`/workspace/${data.signup.id}`);
+      navigate(`/workspace`);
     },
   });
   return (

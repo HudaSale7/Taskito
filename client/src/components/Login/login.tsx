@@ -20,7 +20,7 @@ function Login() {
       localStorage.token = data.login.token;
       localStorage.userId = data.login.id;
       localStorage.name = data.login.name;
-      navigate(`/workspace/${data.login.id}`);
+      navigate(`/workspace`);
     },
   });
   return (

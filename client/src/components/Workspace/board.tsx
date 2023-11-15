@@ -27,6 +27,7 @@ function Board(props: { workspaceId: string; workspace: any }) {
   const mutation = useMutation({
     mutationFn: createStatus,
     onSuccess: (data: Status) => {
+      const newStatus = {...data.createStatus, tasks: []};
       queryClient.setQueryData(
         ["workspace", props.workspaceId],
         (oldData: any) => {
@@ -36,7 +37,7 @@ function Board(props: { workspaceId: string; workspace: any }) {
                 ...oldData.getWorkspace.workspace,
                 statuses: [
                   ...oldData.getWorkspace.workspace.statuses,
-                  data.createStatus,
+                  newStatus,
                 ],
               },
             },

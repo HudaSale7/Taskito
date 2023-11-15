@@ -67,7 +67,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
                   if (status.id === statusId) {
                     return {
                       ...status,
-                      tasks: [...status.tasks, data.createTask],
+                      tasks: [data.createTask, ...status.tasks],
                     };
                   } else {
                     return status;
@@ -128,7 +128,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => {
+    onMutate: () => {
       queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
         return {
           getWorkspace: {

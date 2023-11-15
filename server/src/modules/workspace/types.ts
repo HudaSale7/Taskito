@@ -17,7 +17,7 @@ export const workspaceTypes = /* GraphQL */ `
   }
   extend type Query {
     getWorkspace(id: ID!): WorkspaceAccessType!
-    getAllWorkspace: [WorkspacesGetType]!
+    getAllWorkspace: [WorkspacesGetType]
   }
   extend type Mutation {
     createWorkspace(workspace: WorkspaceCreateInput!): Workspace!
