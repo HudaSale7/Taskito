@@ -41,4 +41,4 @@ Taskito is a task management web application designed to help individuals and te
 
 - [ ] Drag and drop tasks
 - [ ] Filter tasks
-- [ ] attach pictures to tasks
+- [ ] Attach pictures to tasks
