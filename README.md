@@ -21,9 +21,7 @@ Taskito is a task management web application designed to help individuals and te
 
 
 
-https://github.com/HudaSale7/Taskito/assets/109099521/d398d86e-2a9a-4ff7-9d8d-29bf3111d20b
-
-
+https://github.com/HudaSale7/Taskito/assets/109099521/72ec0414-80c9-4d0a-bf32-a6804a53e522
 
 
 
