@@ -128,7 +128,7 @@ function TaskForm(props: { workspaceId: string; workspace: any }) {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
-    onMutate: () => {
+    onSuccess: () => {
       queryClient.setQueryData(["workspace", props.workspaceId], (old: any) => {
         return {
           getWorkspace: {
