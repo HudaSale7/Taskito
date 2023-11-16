@@ -6,10 +6,11 @@ Taskito is a task management web application designed to help individuals and te
 
 ## 2. Features
 
-- Create, update, and delete tasks
-- Create, update, and delete todo items within tasks
+- Assign team members to Workspace
+- Create status columns for organizing tasks
+- Create tasks and assign them to team members in a workspace
+- Each task can have a todo list of subtasks
 - Mark todo items as complete or incomplete
-- Assign tasks to team members and view tasks assigned to you
 - User authentication and access control
 - User-friendly and intuitive user interface
 
@@ -19,11 +20,7 @@ Taskito is a task management web application designed to help individuals and te
 
 ## 4. Demo
 
-
-
 https://github.com/HudaSale7/Taskito/assets/109099521/72ec0414-80c9-4d0a-bf32-a6804a53e522
-
-
 
 ## 5. Technologies
 
